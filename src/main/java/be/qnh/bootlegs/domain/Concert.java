@@ -35,6 +35,20 @@ public class Concert extends AbstractEntity implements Serializable {
     public Concert() {
     }
 
+    private Concert(Builder builder) {
+        setDate(builder.date);
+        setTitle(builder.title);
+        setCountry(builder.country);
+        setCity(builder.city);
+        setVenue(builder.venue);
+        setQuality(builder.quality);
+        setTrackList(builder.trackList);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     // getters and setters
 
     public LocalDate getDate() {
@@ -123,5 +137,58 @@ public class Concert extends AbstractEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getDate(), getTitle(), getCountry(), getCity(), getVenue());
+    }
+
+
+    public static final class Builder {
+        private @NotNull LocalDate date;
+        private @NotNull String title;
+        private String country;
+        private String city;
+        private String venue;
+        private RecordingQuality quality;
+        private List<Track> trackList;
+
+        private Builder() {
+        }
+
+        public Builder date(@NotNull LocalDate val) {
+            date = val;
+            return this;
+        }
+
+        public Builder title(@NotNull String val) {
+            title = val;
+            return this;
+        }
+
+        public Builder country(String val) {
+            country = val;
+            return this;
+        }
+
+        public Builder city(String val) {
+            city = val;
+            return this;
+        }
+
+        public Builder venue(String val) {
+            venue = val;
+            return this;
+        }
+
+        public Builder quality(RecordingQuality val) {
+            quality = val;
+            return this;
+        }
+
+        public Builder trackList(List<Track> val) {
+            trackList = val;
+            return this;
+        }
+
+        public Concert build() {
+            return new Concert(this);
+        }
     }
 }

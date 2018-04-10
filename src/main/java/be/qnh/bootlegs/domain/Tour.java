@@ -24,15 +24,35 @@ public class Tour extends AbstractEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Continent continent;
 
+
     // field(s) with mapping(s)
 
     // One Tour has many concerts
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TOUR_ID") //@Joincolumn zorgt voor een foreignkey in de tabel concert, zonder deze annotatie wordt er een tussentabel Tour_Concerts gemaakt
-    private List<Concert> concertList;
+    private List<Concert> concertList = new ArrayList<>();
+
+
+    public void addConcert(Concert concert) {
+        concertList.add(concert);
+    }
+
 
     // constructor
     public Tour() {
+    }
+
+    private Tour(Builder builder) {
+        setTitle(builder.title);
+        setStartyear(builder.startyear);
+        setEndYear(builder.endYear);
+        setLeg(builder.leg);
+        setContinent(builder.continent);
+        setConcertList(builder.concertList);
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     // getters and setters
@@ -112,5 +132,52 @@ public class Tour extends AbstractEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getTitle(), getStartyear(), getEndYear(), getLeg(), getContinent());
+    }
+
+
+    public static final class Builder {
+        private @NotNull String title;
+        private @NotNull int startyear;
+        private int endYear;
+        private @NotNull int leg;
+        private @NotNull Continent continent;
+        private List<Concert> concertList = new ArrayList<>(           );
+
+        private Builder() {
+        }
+
+        public Builder title(@NotNull String val) {
+            title = val;
+            return this;
+        }
+
+        public Builder startyear(@NotNull int val) {
+            startyear = val;
+            return this;
+        }
+
+        public Builder endYear(int val) {
+            endYear = val;
+            return this;
+        }
+
+        public Builder leg(@NotNull int val) {
+            leg = val;
+            return this;
+        }
+
+        public Builder continent(@NotNull Continent val) {
+            continent = val;
+            return this;
+        }
+
+        public Builder concertList(List<Concert> val) {
+            concertList = val;
+            return this;
+        }
+
+        public Tour build() {
+            return new Tour(this);
+        }
     }
 }
